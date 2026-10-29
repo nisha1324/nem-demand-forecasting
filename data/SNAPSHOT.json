@@ -1,0 +1,36 @@
+{
+  "file": "demand_halfhourly.csv.gz",
+  "sha256": "694167b10ca3b3f403324f638a7d3de1db258060666e7bce29c811aa1eff5ced",
+  "rows": 679200,
+  "regions": [
+    "NSW1",
+    "QLD1",
+    "VIC1",
+    "SA1",
+    "TAS1"
+  ],
+  "first_month": "2019-01",
+  "last_month": "2026-09",
+  "first_interval_end": "2019-01-01 00:30:00",
+  "last_interval_end": "2026-10-01 00:00:00",
+  "time_basis": "NEM time (AEST, UTC+10, no daylight saving); interval-ending",
+  "columns": {
+    "region": "NEM region id (NSW1, QLD1, VIC1, SA1, TAS1)",
+    "interval_end": "end of the half-hour, NEM time",
+    "demand_mw": "operational demand (TOTALDEMAND), MW, time-weighted mean over the half-hour",
+    "rrp": "regional reference price, $/MWh, time-weighted mean over the half-hour",
+    "n_intervals": "source intervals averaged (6 for 5-minute data, 1 for 30-minute)",
+    "resolution_min": "source resolution in minutes (30 before Oct 2021, then 5)"
+  },
+  "raw_checks": {
+    "raw_rows_30min": 240960,
+    "exact_duplicate_rows": 0,
+    "raw_rows_5min": 2629440,
+    "files": 465,
+    "period_types": {
+      "TRADE": 2870400
+    }
+  },
+  "source": "https://aemo.com.au/energy-systems/electricity/national-electricity-market-nem/data-nem/aggregated-data",
+  "licence": "Source: Australian Energy Market Operator (AEMO), Aggregated price and demand data, used under AEMO's copyright permissions (any purpose, with attribution to AEMO as author)."
+}
