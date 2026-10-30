@@ -54,12 +54,16 @@ def same_weekday_mean(history: np.ndarray, lead: int, weeks: int = 4) -> np.ndar
     return _take(history, [t - 7 * k for k in range(1, weeks + 1)]).mean(axis=0)
 
 
+def climatology_steps(years: int = 3, window: int = 3) -> np.ndarray:
+    """Days back from a target to the days a climatology averages (52-week steps keep the weekday)."""
+    return np.array([364 * y - 7 * w for y in range(1, years + 1) for w in range(-window, window + 1)])
+
+
 def climatology(history: np.ndarray, lead: int, years: int = 3, window: int = 3) -> np.ndarray:
     """Long-run average: the same weekday within +/- `window` weeks of this
-    date in each of the previous `years` years (52-week steps keep the weekday)."""
+    date in each of the previous `years` years."""
     t = len(history) + lead - 1
-    rows = [t - 364 * y + 7 * w for y in range(1, years + 1) for w in range(-window, window + 1)]
-    return _take(history, rows).mean(axis=0)
+    return _take(history, t - climatology_steps(years, window)).mean(axis=0)
 
 
 METHODS = {
@@ -92,18 +96,19 @@ def day_matrix(series: pd.DataFrame) -> tuple[pd.DatetimeIndex, np.ndarray]:
 
 
 def forecasts(days: pd.DatetimeIndex, m: np.ndarray, first: str, last: str,
-              methods=tuple(METHODS), leads=LEADS) -> pd.DataFrame:
+              methods=tuple(METHODS), leads=LEADS, extra=None) -> pd.DataFrame:
     """Forecast every target day in [first, last] at every lead with every method.
 
     Returns one row per (method, lead, target day, slot) with actual and forecast.
     The target days are the same for every lead, so leads compare like with like.
+    `extra` maps more method keys to fn(history, lead), run the same way.
     """
     targets = np.flatnonzero((days >= first) & (days <= last))
     if not len(targets):
         raise ValueError("no target days in range")
+    fns = {key: METHODS[key][1] for key in methods} | dict(extra or {})
     frames = []
-    for key in methods:
-        fn = METHODS[key][1]
+    for key, fn in fns.items():
         for lead in leads:
             pred = np.stack([fn(m[: t - lead + 1], lead) for t in targets])
             frames.append(pd.DataFrame({
