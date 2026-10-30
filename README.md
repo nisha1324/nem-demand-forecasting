@@ -94,7 +94,8 @@ yesterday's is a far better guide to tomorrow's than last week's.
 **Week-ahead, averages win.** Persistence decays fast: from 2 days ahead, naive isn't the best method
 in any region. Over a whole week, the 3-year climatology is best in NSW, Queensland and South
 Australia, and the 4-week mean in Victoria and Tasmania. Averaging many similar days washes out
-one-off weather.
+one-off weather. This partly overturns Part 1's guess that recent history beats long-run averages:
+it holds for tomorrow, but for next week a 3-year average does better in 3 of 5 regions.
 
 ![Forecast error by lead time](results/charts/backtest_error_by_lead.png)
 
