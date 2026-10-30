@@ -73,7 +73,6 @@ METHODS = {
                            "the same weekday within ±3 weeks of this date in each of the "
                            "previous 3 years (21 days averaged)"), climatology),
 }
-REFERENCE = "seasonal_naive"  # the baseline every later method has to beat
 
 
 def day_matrix(series: pd.DataFrame) -> tuple[pd.DatetimeIndex, np.ndarray]:
