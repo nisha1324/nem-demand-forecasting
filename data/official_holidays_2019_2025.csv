@@ -1,0 +1,452 @@
+region,date,name
+NSW1,2019-01-01,New Year's Day
+NSW1,2019-01-28,Australia Day
+NSW1,2019-04-19,Good Friday
+NSW1,2019-04-20,Saturday before Easter Sunday
+NSW1,2019-04-21,Easter Sunday
+NSW1,2019-04-22,Easter Monday
+NSW1,2019-04-25,Anzac Day
+NSW1,2019-06-10,Queen's Birthday
+NSW1,2019-08-05,Bank Holiday
+NSW1,2019-10-07,Labour Day
+NSW1,2019-12-25,Christmas Day
+NSW1,2019-12-26,Boxing Day
+NSW1,2020-01-01,New Year's Day
+NSW1,2020-01-27,Australia Day
+NSW1,2020-04-10,Good Friday
+NSW1,2020-04-11,Easter Saturday - the Saturday following Good Friday
+NSW1,2020-04-12,Easter Sunday
+NSW1,2020-04-13,Easter Monday
+NSW1,2020-04-25,Anzac Day
+NSW1,2020-06-08,Queen's Birthday
+NSW1,2020-08-03,Bank Holiday
+NSW1,2020-10-05,Labour Day
+NSW1,2020-12-25,Christmas Day
+NSW1,2020-12-26,Boxing Day
+NSW1,2020-12-28,Boxing Day (Additional day)
+NSW1,2021-01-01,New Year's Day
+NSW1,2021-01-26,Australia Day
+NSW1,2021-04-02,Good Friday
+NSW1,2021-04-03,Easter Saturday
+NSW1,2021-04-04,Easter Sunday
+NSW1,2021-04-05,Easter Monday
+NSW1,2021-04-25,Anzac Day
+NSW1,2021-06-14,Queen's Birthday
+NSW1,2021-08-02,Bank Holiday
+NSW1,2021-10-04,Labour Day
+NSW1,2021-12-25,Christmas Day
+NSW1,2021-12-26,Boxing Day
+NSW1,2021-12-27,Christmas (additional day)
+NSW1,2021-12-28,Boxing Day (additional day)
+NSW1,2022-01-01,New Year's Day
+NSW1,2022-01-03,New Year's Day (additional day)
+NSW1,2022-01-26,Australia Day
+NSW1,2022-04-15,Good Friday
+NSW1,2022-04-16,Easter Saturday - the Saturday following Good Friday
+NSW1,2022-04-17,Easter Sunday
+NSW1,2022-04-18,Easter Monday
+NSW1,2022-04-25,Anzac Day
+NSW1,2022-06-13,Queen's Birthday
+NSW1,2022-08-01,Bank Holiday
+NSW1,2022-10-03,Labour Day
+NSW1,2022-12-25,Christmas Day
+NSW1,2022-12-26,Boxing Day
+NSW1,2022-12-27,Christmas (additional day)
+NSW1,2023-01-01,New Year's Day
+NSW1,2023-01-02,New Year's Day (observed)
+NSW1,2023-01-26,Australia Day
+NSW1,2023-04-07,Good Friday
+NSW1,2023-04-08,Easter Saturday
+NSW1,2023-04-09,Easter Sunday
+NSW1,2023-04-10,Easter Monday
+NSW1,2023-04-25,Anzac Day
+NSW1,2023-06-12,King's Birthday
+NSW1,2023-08-07,Bank Holiday
+NSW1,2023-10-02,Labour Day
+NSW1,2023-12-25,Christmas Day
+NSW1,2023-12-26,Boxing Day
+NSW1,2024-01-01,New Year's Day
+NSW1,2024-01-26,Australia Day
+NSW1,2024-03-29,Good Friday
+NSW1,2024-03-30,Easter Saturday
+NSW1,2024-03-31,Easter Sunday
+NSW1,2024-04-01,Easter Monday
+NSW1,2024-04-25,Anzac Day
+NSW1,2024-06-10,King's Birthday
+NSW1,2024-08-05,Bank Holiday
+NSW1,2024-10-07,Labour Day
+NSW1,2024-12-25,Christmas Day
+NSW1,2024-12-26,Boxing Day
+NSW1,2025-01-01,New Year's Day
+NSW1,2025-01-27,Australia Day
+NSW1,2025-04-18,Good Friday
+NSW1,2025-04-19,Easter Saturday
+NSW1,2025-04-20,Easter Sunday
+NSW1,2025-04-21,Easter Monday
+NSW1,2025-04-25,Anzac Day
+NSW1,2025-06-09,King's Birthday
+NSW1,2025-08-04,Bank Holiday
+NSW1,2025-10-06,Labour Day
+NSW1,2025-12-25,Christmas Day
+NSW1,2025-12-26,Boxing Day
+QLD1,2019-01-01,New Year's Day
+QLD1,2019-01-28,Australia Day
+QLD1,2019-04-19,Good Friday
+QLD1,2019-04-20,Saturday before Easter Sunday
+QLD1,2019-04-21,Easter Sunday
+QLD1,2019-04-22,Easter Monday
+QLD1,2019-04-25,Anzac Day
+QLD1,2019-05-06,Labour Day
+QLD1,2019-10-07,Queen's Birthday
+QLD1,2019-12-25,Christmas Day
+QLD1,2019-12-26,Boxing Day
+QLD1,2020-01-01,New Year's Day
+QLD1,2020-01-27,Australia Day
+QLD1,2020-04-10,Good Friday
+QLD1,2020-04-11,The day after Good Friday
+QLD1,2020-04-12,Easter Sunday
+QLD1,2020-04-13,Easter Monday
+QLD1,2020-04-25,Anzac Day
+QLD1,2020-05-04,Labour Day
+QLD1,2020-10-05,Queen's Birthday
+QLD1,2020-12-24,Christmas Eve
+QLD1,2020-12-25,Christmas Day
+QLD1,2020-12-26,Boxing Day
+QLD1,2020-12-28,Boxing Day (Additional day)
+QLD1,2021-01-01,New Year's Day
+QLD1,2021-01-26,Australia Day
+QLD1,2021-04-02,Good Friday
+QLD1,2021-04-03,The Day after Good Friday
+QLD1,2021-04-04,Easter Sunday
+QLD1,2021-04-05,Easter Monday
+QLD1,2021-04-26,Anzac Day
+QLD1,2021-05-03,Labour Day
+QLD1,2021-10-04,Queen's Birthday
+QLD1,2021-12-24,Christmas Eve 6pm - Midnight
+QLD1,2021-12-25,Christmas Day
+QLD1,2021-12-26,Boxing Day
+QLD1,2021-12-27,Christmas (additional day)
+QLD1,2021-12-28,Boxing Day (additional day)
+QLD1,2022-01-01,New Year's Day
+QLD1,2022-01-03,New Year's Day (additional day)
+QLD1,2022-01-26,Australia Day
+QLD1,2022-04-15,Good Friday
+QLD1,2022-04-16,The day after Good Friday
+QLD1,2022-04-17,Easter Sunday
+QLD1,2022-04-18,Easter Monday
+QLD1,2022-04-25,Anzac Day
+QLD1,2022-05-02,Labour Day
+QLD1,2022-10-03,Queen's Birthday
+QLD1,2022-12-24,Christmas Eve 6pm - Midnight
+QLD1,2022-12-25,Christmas Day
+QLD1,2022-12-26,Boxing Day
+QLD1,2022-12-27,Christmas (additional day)
+QLD1,2023-01-01,New Year's Day
+QLD1,2023-01-02,New Year's Day (observed)
+QLD1,2023-01-26,Australia Day
+QLD1,2023-04-07,Good Friday
+QLD1,2023-04-08,Easter Saturday
+QLD1,2023-04-09,Easter Sunday
+QLD1,2023-04-10,Easter Monday
+QLD1,2023-04-25,Anzac Day
+QLD1,2023-05-01,Labour Day
+QLD1,2023-08-16,Royal Queensland Show (Brisbane only)
+QLD1,2023-10-02,Kingâ€™s Birthday
+QLD1,2023-12-24,Christmas Eve
+QLD1,2023-12-25,Christmas Day
+QLD1,2023-12-26,Boxing Day
+QLD1,2024-01-01,New Year's Day
+QLD1,2024-01-26,Australia Day
+QLD1,2024-03-29,Good Friday
+QLD1,2024-03-30,Easter Saturday
+QLD1,2024-03-31,Easter Sunday
+QLD1,2024-04-01,Easter Monday
+QLD1,2024-04-25,Anzac Day
+QLD1,2024-05-06,Labour Day
+QLD1,2024-08-14,Royal Queensland Show (Brisbane only)
+QLD1,2024-10-07,Kingâ€™s Birthday
+QLD1,2024-12-24,Christmas Eve
+QLD1,2024-12-25,Christmas Day
+QLD1,2024-12-26,Boxing Day
+QLD1,2025-01-01,New Year's Day
+QLD1,2025-01-27,Australia Day
+QLD1,2025-04-18,Good Friday
+QLD1,2025-04-19,The day after Good Friday
+QLD1,2025-04-20,Easter Sunday
+QLD1,2025-04-21,Easter Monday
+QLD1,2025-04-25,Anzac Day
+QLD1,2025-05-05,Labour Day
+QLD1,2025-08-13,Royal Queensland Show (Brisbane area only)
+QLD1,2025-10-06,King's Birthday
+QLD1,2025-12-24,Christmas Eve (24 December) 6pm - midnight
+QLD1,2025-12-25,Christmas Day
+QLD1,2025-12-26,Boxing Day
+SA1,2019-01-01,New Year's Day
+SA1,2019-01-28,Australia Day
+SA1,2019-03-11,March public holiday
+SA1,2019-04-19,Good Friday
+SA1,2019-04-20,Saturday before Easter Sunday
+SA1,2019-04-22,Easter Monday
+SA1,2019-04-25,Anzac Day
+SA1,2019-06-10,Queen's Birthday
+SA1,2019-10-07,Labour Day
+SA1,2019-12-24,Christmas Eve
+SA1,2019-12-25,Christmas Day
+SA1,2019-12-26,Proclamation Day
+SA1,2019-12-31,New Year's Eve
+SA1,2020-01-01,New Year's Day
+SA1,2020-01-26,Australia Day
+SA1,2020-01-27,Australia Day (Additional day)
+SA1,2020-03-09,Adelaide Cup Day
+SA1,2020-04-10,Good Friday
+SA1,2020-04-11,Easter Saturday
+SA1,2020-04-13,Easter Monday
+SA1,2020-04-25,Anzac Day
+SA1,2020-06-08,Queen's Birthday/Volunteer's Day
+SA1,2020-10-05,Labour Day
+SA1,2020-12-24,Christmas Eve
+SA1,2020-12-25,Christmas Day
+SA1,2020-12-28,Boxing/Proclamation Day
+SA1,2020-12-31,New Year's Eve
+SA1,2021-01-01,New Year's Day
+SA1,2021-01-26,Australia Day
+SA1,2021-03-08,Adelaide Cup Day
+SA1,2021-04-02,Good Friday
+SA1,2021-04-03,Easter Saturday
+SA1,2021-04-05,Easter Monday
+SA1,2021-04-26,Anzac Day (additional day)
+SA1,2021-06-14,Queen's Birthday
+SA1,2021-10-04,Labour Day
+SA1,2021-12-24,Christmas Eve 7pm - Midnight
+SA1,2021-12-25,Christmas Day
+SA1,2021-12-26,Boxing Day / Proclamation Day
+SA1,2021-12-27,Christmas (additional day)
+SA1,2021-12-28,Boxing Day / Proclamation Day (additional day)
+SA1,2021-12-31,New Year's Eve 7pm - Midnight
+SA1,2022-01-03,New Year's Day
+SA1,2022-01-26,Australia Day
+SA1,2022-03-14,Adelaide Cup Day
+SA1,2022-04-15,Good Friday
+SA1,2022-04-16,Easter Saturday
+SA1,2022-04-18,Easter Monday
+SA1,2022-04-25,Anzac Day
+SA1,2022-06-13,Queen's Birthday / Volunteer's Day
+SA1,2022-10-03,Labour Day
+SA1,2022-12-24,Christmas Eve 7pm - midnight
+SA1,2022-12-25,Christmas Day
+SA1,2022-12-26,Boxing Day / Proclamation Day
+SA1,2022-12-27,Christmas (additional day)
+SA1,2022-12-31,New Year's Eve 7pm - midnight
+SA1,2023-01-01,New Year's Day
+SA1,2023-01-02,New Year's Day (observed)
+SA1,2023-01-26,Australia Day
+SA1,2023-03-13,Adelaide Cup Day
+SA1,2023-04-07,Good Friday
+SA1,2023-04-08,Easter Saturday
+SA1,2023-04-10,Easter Monday
+SA1,2023-04-25,Anzac Day
+SA1,2023-06-12,Kingâ€™s Birthday
+SA1,2023-10-02,Labour Day
+SA1,2023-12-24,Christmas Eve
+SA1,2023-12-25,Christmas Day
+SA1,2023-12-26,Boxing Day / Proclamation Day
+SA1,2023-12-31,New Year's Eve
+SA1,2024-01-01,New Year's Day
+SA1,2024-01-26,Australia Day
+SA1,2024-03-11,Adelaide Cup Day (subject to Proclamation)
+SA1,2024-03-29,Good Friday
+SA1,2024-03-30,Easter Saturday
+SA1,2024-04-01,Easter Monday
+SA1,2024-04-25,Anzac Day
+SA1,2024-06-10,Kingâ€™s Birthday
+SA1,2024-10-07,Labour Day
+SA1,2024-12-24,Christmas Eve
+SA1,2024-12-25,Christmas Day
+SA1,2024-12-26,Boxing Day / Proclamation Day
+SA1,2024-12-31,New Year's Eve
+SA1,2025-01-01,New Years Day
+SA1,2025-01-27,Australia Day public holiday
+SA1,2025-03-10,Adelaide Cup Day
+SA1,2025-04-18,Good Friday
+SA1,2025-04-19,Easter Saturday
+SA1,2025-04-20,Easter Sunday
+SA1,2025-04-21,Easter Monday
+SA1,2025-04-25,ANZAC Day
+SA1,2025-06-09,Kings Birthday
+SA1,2025-10-06,Labour Day
+SA1,2025-12-24,Christmas Eve: 7pm to midnight
+SA1,2025-12-25,Christmas Day
+SA1,2025-12-26,Proclamation Day holiday and Boxing Day
+SA1,2025-12-31,New Years Eve: 7pm to midnight
+TAS1,2019-01-01,New Year's Day
+TAS1,2019-01-28,Australia Day
+TAS1,2019-02-11,Royal Hobart Regatta
+TAS1,2019-03-11,Eight Hours Day
+TAS1,2019-04-19,Good Friday
+TAS1,2019-04-22,Easter Monday
+TAS1,2019-04-23,Easter Tuesday
+TAS1,2019-04-25,Anzac Day
+TAS1,2019-06-10,Queen's Birthday
+TAS1,2019-12-25,Christmas Day
+TAS1,2019-12-26,Boxing Day
+TAS1,2020-01-01,New Year's Day
+TAS1,2020-01-27,Australia Day
+TAS1,2020-03-09,Eight Hours Day
+TAS1,2020-04-10,Good Friday
+TAS1,2020-04-13,Easter Monday
+TAS1,2020-04-14,Easter Tuesday
+TAS1,2020-04-25,Anzac Day
+TAS1,2020-06-08,Queen's Birthday
+TAS1,2020-12-25,Christmas Day
+TAS1,2020-12-28,Boxing Day
+TAS1,2021-01-01,New Year's Day
+TAS1,2021-01-26,Australia Day
+TAS1,2021-03-08,Eight Hours Day
+TAS1,2021-04-02,Good Friday
+TAS1,2021-04-05,Easter Monday
+TAS1,2021-04-06,Easter Tuesday
+TAS1,2021-04-25,Anzac Day
+TAS1,2021-06-14,Queen's Birthday
+TAS1,2021-12-25,Christmas Day
+TAS1,2021-12-26,Boxing Day
+TAS1,2021-12-27,Christmas (additional day)
+TAS1,2021-12-28,Boxing Day (additional day)
+TAS1,2022-01-03,New Year's Day
+TAS1,2022-01-26,Australia Day
+TAS1,2022-03-14,Eight Hours Day
+TAS1,2022-04-15,Good Friday
+TAS1,2022-04-18,Easter Monday
+TAS1,2022-04-19,Easter Tuesday
+TAS1,2022-04-25,Anzac Day
+TAS1,2022-06-13,Queen's Birthday
+TAS1,2022-12-25,Christmas Day
+TAS1,2022-12-26,Boxing Day
+TAS1,2022-12-27,Christmas (additional day)
+TAS1,2023-01-01,New Year's Day
+TAS1,2023-01-02,New Year's Day (observed)
+TAS1,2023-01-26,Australia Day
+TAS1,2023-03-13,Eight Hours Day
+TAS1,2023-04-07,Good Friday
+TAS1,2023-04-10,Easter Monday
+TAS1,2023-04-11,Easter Tuesday
+TAS1,2023-04-25,Anzac Day
+TAS1,2023-06-12,King's Birthday
+TAS1,2023-12-25,Christmas Day
+TAS1,2023-12-26,Boxing Day
+TAS1,2024-01-01,New Year's Day
+TAS1,2024-01-26,Australia Day
+TAS1,2024-03-11,Eight Hours Day
+TAS1,2024-03-29,Good Friday
+TAS1,2024-04-01,Easter Monday
+TAS1,2024-04-02,Easter Tuesday
+TAS1,2024-04-25,Anzac Day
+TAS1,2024-06-10,King's Birthday
+TAS1,2024-12-25,Christmas Day
+TAS1,2024-12-26,Boxing Day
+TAS1,2025-01-01,New Year's Day
+TAS1,2025-01-27,Australia Day
+TAS1,2025-03-10,Eight Hours Day
+TAS1,2025-04-18,Good Friday
+TAS1,2025-04-21,Easter Monday
+TAS1,2025-04-22,Easter Tuesday - generally Tasmanian Public Service only
+TAS1,2025-04-25,ANZAC Day
+TAS1,2025-06-09,King's Birthday
+TAS1,2025-12-25,Christmas Day
+TAS1,2025-12-26,Boxing Day
+VIC1,,Friday before the AFL Grand Final
+VIC1,2019-01-01,New Year's Day
+VIC1,2019-01-28,Australia Day
+VIC1,2019-03-11,Labour Day
+VIC1,2019-04-19,Good Friday
+VIC1,2019-04-20,Saturday before Easter Sunday
+VIC1,2019-04-21,Easter Sunday
+VIC1,2019-04-22,Easter Monday
+VIC1,2019-04-25,Anzac Day
+VIC1,2019-06-10,Queen's Birthday
+VIC1,2019-09-27,Friday before AFL Grand Final
+VIC1,2019-11-05,Melbourne Cup
+VIC1,2019-12-25,Christmas Day
+VIC1,2019-12-26,Boxing Day
+VIC1,2020-01-01,New Year's Day
+VIC1,2020-01-27,Australia Day
+VIC1,2020-03-09,Labour Day
+VIC1,2020-04-10,Good Friday
+VIC1,2020-04-11,Saturday before Easter Sunday
+VIC1,2020-04-12,Easter Sunday
+VIC1,2020-04-13,Easter Monday
+VIC1,2020-04-25,Anzac Day
+VIC1,2020-06-08,Queen's Birthday
+VIC1,2020-10-23,Friday before the AFL grand final
+VIC1,2020-11-03,Melbourne cup day
+VIC1,2020-12-25,Christmas Day
+VIC1,2020-12-26,Boxing Day
+VIC1,2020-12-28,Boxing Day (Additional day)
+VIC1,2021-01-01,New Year's Day
+VIC1,2021-01-26,Australia Day
+VIC1,2021-03-08,Labour Day
+VIC1,2021-04-02,Good Friday
+VIC1,2021-04-03,Saturday before Easter Sunday
+VIC1,2021-04-04,Easter Sunday
+VIC1,2021-04-05,Easter Monday
+VIC1,2021-04-25,Anzac Day
+VIC1,2021-06-14,Queen's Birthday
+VIC1,2021-09-24,Friday before AFL Grand Final
+VIC1,2021-11-02,Melbourne Cup
+VIC1,2021-12-25,Christmas Day
+VIC1,2021-12-26,Boxing Day
+VIC1,2021-12-27,Christmas (additional day)
+VIC1,2021-12-28,Boxing Day (additional day)
+VIC1,2022-01-01,New Year's Day
+VIC1,2022-01-03,New Year's Day (additional day)
+VIC1,2022-01-26,Australia Day
+VIC1,2022-03-14,Labour Day
+VIC1,2022-04-15,Good Friday
+VIC1,2022-04-16,Saturday before Easter Sunday
+VIC1,2022-04-17,Easter Sunday
+VIC1,2022-04-18,Easter Monday
+VIC1,2022-04-25,Anzac Day
+VIC1,2022-06-13,Queen's Birthday
+VIC1,2022-09-23,Friday before the AFL Grand Final
+VIC1,2022-11-01,Melbourne Cup
+VIC1,2022-12-25,Christmas Day
+VIC1,2022-12-26,Boxing Day
+VIC1,2022-12-27,Christmas (additional day)
+VIC1,2023-01-01,New Year's Day
+VIC1,2023-01-02,New Year's Day (observed)
+VIC1,2023-01-26,Australia Day
+VIC1,2023-03-13,Labour Day
+VIC1,2023-04-07,Good Friday
+VIC1,2023-04-08,Easter Saturday
+VIC1,2023-04-09,Easter Sunday
+VIC1,2023-04-10,Easter Monday
+VIC1,2023-04-25,Anzac Day
+VIC1,2023-06-12,King's Birthday
+VIC1,2023-09-29,Friday before the AFL Grand Final
+VIC1,2023-11-07,Melbourne Cup
+VIC1,2023-12-25,Christmas Day
+VIC1,2023-12-26,Boxing Day
+VIC1,2024-01-01,New Year's Day
+VIC1,2024-01-26,Australia Day
+VIC1,2024-03-11,Labour Day
+VIC1,2024-03-29,Good Friday
+VIC1,2024-03-30,Easter Saturday
+VIC1,2024-03-31,Easter Sunday
+VIC1,2024-04-01,Easter Monday
+VIC1,2024-04-25,Anzac Day
+VIC1,2024-06-10,King's Birthday
+VIC1,2024-09-27,Friday before the AFL Grand Final
+VIC1,2024-11-05,Melbourne Cup
+VIC1,2024-12-25,Christmas Day
+VIC1,2024-12-26,Boxing Day
+VIC1,2025-01-01,New Year's Day
+VIC1,2025-01-27,Australia Day
+VIC1,2025-03-10,Labour Day
+VIC1,2025-04-18,Good Friday
+VIC1,2025-04-19,Saturday before Easter Sunday
+VIC1,2025-04-20,Easter Sunday
+VIC1,2025-04-21,Easter Monday
+VIC1,2025-04-25,ANZAC Day
+VIC1,2025-06-09,King's Birthday
+VIC1,2025-11-04,Melbourne Cup
+VIC1,2025-12-25,Christmas Day
+VIC1,2025-12-26,Boxing Day
