@@ -1,6 +1,6 @@
 # Forecasting electricity demand for operations planning (AEMO, 5 NEM regions)
 
-**Status: in progress, Part 1 of 5 done (data source, snapshot and profile).**
+**Status: in progress, Parts 1-2 of 5 done (data source and profile; baseline backtest).**
 
 How well can **simple, explainable forecasting methods** predict tomorrow's and next week's
 half-hourly electricity demand in Australia's National Electricity Market (NEM)? And how much
@@ -64,13 +64,76 @@ half-hour of the year fell in Dec-Mar in 26 of 28 region-years.
 - Any method has to handle time of day, day of week and season at once, so those are the minimum
   bar for every baseline in the backtest.
 
+## Part 2: how good is a forecast anyone can explain?
+
+Full generated report: [`results/BACKTEST.md`](results/BACKTEST.md); every number for every
+region, method, lead and window is in [`results/backtest_metrics.csv`](results/backtest_metrics.csv).
+
+**Setup.** A rolling-origin backtest: every day from 1 Oct 2025 to 30 Sep 2026 (365 days, all
+seasons) in all 5 regions is forecast 1 to 7 days ahead, from origins at midnight that know nothing
+after them. Each method only ever gets the history up to its origin, so it can't peek at the answer.
+Four baselines, none using weather:
+
+| Method | Forecast for a target day |
+|---|---|
+| Naive | the last full day seen ("tomorrow = today") |
+| Seasonal naive | the same weekday one week earlier |
+| 4-week mean | the same weekday averaged over the last 4 weeks |
+| 3-year climatology | the same weekday within ±3 weeks of the date, in each of the previous 3 years |
+
+Accuracy is measured by **WAPE** (total absolute error / total demand), with MAE, bias and daily
+peak and trough error in MW alongside. MAPE is left out on purpose: South Australia's demand nears
+and crosses zero at midday, which pushes its MAPE to 704-1124% while its WAPE is 13.6-18.7%.
+
+**Day-ahead, yesterday beats last week.** Naive is the best day-ahead baseline in 3 of 5 regions
+(NSW 7.1%, Queensland 5.4%, Tasmania 6.4% WAPE); the 4-week mean wins in Victoria (10.0%) and
+climatology in South Australia (13.6%). The textbook seasonal naive comes last in 4 of 5, and
+swapping last week for yesterday cuts day-ahead error by 13-28%. The likeliest reason is weather:
+yesterday's is a far better guide to tomorrow's than last week's.
+
+**Week-ahead, averages win.** Persistence decays fast: from 2 days ahead, naive isn't the best method
+in any region. Over a whole week, the 3-year climatology is best in NSW, Queensland and South
+Australia, and the 4-week mean in Victoria and Tasmania. Averaging many similar days washes out
+one-off weather.
+
+![Forecast error by lead time](results/charts/backtest_error_by_lead.png)
+
+**The error lives at midday.** On the mainland, 40-49% of the best method's day-ahead error falls
+between 10:00 and 16:00, a quarter of the day, where half-hours miss by 2.0-2.8× as much as the rest.
+South Australia, with the deepest solar dip, is the most midday-heavy (2.8×); Tasmania, with the
+shallowest, is the flattest (1.2×). That fits rooftop solar: cloud decides how much demand the grid
+sees at noon, and no baseline knows tomorrow's cloud.
+
+![Day-ahead error by time of day](results/charts/backtest_error_by_time_of_day.png)
+
+**Calendar and level effects.** Naive's Monday and Saturday error is 1.2-1.7× its midweek error,
+because it forecasts a Monday from a Sunday. Christmas Day is among the three worst days in 4 of 5
+regions. Climatology carries any shift in a region's level straight into the forecast: in the latest
+year it under-forecast Victoria by 258 MW (5.1% of average demand) and over-forecast Tasmania by
+104 MW (10.2%). Re-run on the year before (Oct 2024 - Sep 2025), the best method is the same in 7 of
+10 region-horizon pairs, so the ranking is fairly stable but not fixed.
+
+**So what for the business?**
+- **Pick the baseline by horizon, not by habit.** A planner scheduling tomorrow should start from
+  today's load; one planning next week should start from an average of similar days. The usual
+  "same day last week" default is the worst day-ahead choice in 4 of 5 regions and isn't the best at
+  either horizon in any region.
+- **Size buffers for the midday trough, not only the evening peak.** That's where today's simple
+  forecasts miss the most, and where negative prices and minimum-demand limits sit (Part 1).
+- **Free wins first.** A day-type rule (yesterday midweek, last week after the weekend changes shape)
+  and a holiday calendar target the misses above at no cost to explainability. Part 3 measures how
+  much they actually save.
+- **The bar for Part 3** is set per region and horizon (table in section 7 of the report): any
+  smoothing or weather-adjusted method has to beat, for example, 7.1% day-ahead in NSW and 13.6% in
+  South Australia to be worth its extra complexity.
+
 ## Plan
 
 | Part | What | Status |
 |---|---|---|
 | 1 | Pinned AEMO download, half-hourly snapshot, source profile | ✅ done |
-| 2 | Rolling-origin backtest harness; naive and seasonal-naive baselines; day-ahead and week-ahead error (MAE, MAPE, peak and trough error) | next |
-| 3 | Exponential smoothing (Holt-Winters) and a simple, explainable temperature adjustment from free public weather data | |
+| 2 | Rolling-origin backtest harness; naive, seasonal-naive, 4-week-mean and climatology baselines; day-ahead and week-ahead error (WAPE, MAE, bias, peak and trough error) | ✅ done |
+| 3 | Exponential smoothing (Holt-Winters), a day-type/holiday rule and a simple, explainable temperature adjustment from free public weather data | next |
 | 4 | Business translation: how many MW of buffer cover 90% / 95% of days, which regions and seasons are hardest, recommendations | |
 | 5 | CI, TL;DR and final write-up | |
 
@@ -80,8 +143,9 @@ half-hour of the year fell in Dec-Mar in 26 of 28 region-years.
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt        # or requirements-lock.txt for the exact tested versions
 
-python -m scripts.profile              # report + charts from the committed snapshot
-pytest                                 # 23 tests
+python -m scripts.profile              # Part 1: source profile report + charts
+python -m scripts.backtest             # Part 2: backtest report, metrics CSV + charts (~20 s)
+pytest                                 # 44 tests
 
 # optional: rebuild the snapshot from AEMO's raw files (~127 MB download)
 python -m scripts.download_data        # fetches data/raw/, checks every pinned SHA-256
@@ -104,6 +168,17 @@ the run instead of silently changing the numbers.
 - **Profile** (`tests/test_profile.py`): the committed report and charts match a fresh run, and
   the headline numbers (energy, midday-minimum share, weekend effect, South Australia's negative
   minimum) are recounted independently in pandas.
+- **Backtest harness** (`tests/test_backtest.py`): hand-made series with known answers. A series that
+  repeats every week is forecast exactly by the weekly methods; on a straight-line trend the naive
+  bias is exactly -10 MW per day of lead; each method picks the days it says; replacing everything
+  after the origin with garbage doesn't change any forecast (no look-ahead); a short history raises
+  instead of wrapping around; every metric is checked on a hand-worked two-day example.
+- **Backtest report** (`tests/test_backtest_report.py`): the committed report, CSV and charts match
+  a fresh run; seasonal naive, naive at leads 1 and 4, climatology and the 4-week mean are recounted
+  with plain pandas shifts on the snapshot (no harness code), and the headline winners follow from the
+  metrics. Six deliberate bugs (an off-by-one week, a leaked target day, signed instead of absolute
+  demand in WAPE, a slot shifted by one half-hour, a narrower climatology window, peak used in place of
+  trough) are each caught.
 
 ## Layout
 
@@ -113,6 +188,8 @@ demand/halfhour.py        parse a raw file, roll 5-minute rows into half-hours
 scripts/download_data.py  fetch + verify the raw files
 scripts/build_snapshot.py raw files -> data/demand_halfhourly.csv.gz + SNAPSHOT.json
 scripts/profile.py        DuckDB SQL -> results/SOURCE_PROFILE.md + charts
+demand/backtest.py        day matrix, the four baselines, rolling-origin forecasts, metrics
+scripts/backtest.py       backtest -> results/BACKTEST.md, backtest_metrics.csv + charts
 tests/                    pytest
 ```
 
