@@ -1,6 +1,6 @@
 # Forecasting electricity demand for operations planning (AEMO, 5 NEM regions)
 
-**Status: in progress. Parts 1-3 of 5 are done (data source and profile; baseline backtest; calendar, smoothing, level correction and a weather forecast). Next: how much buffer the leftover error calls for.**
+**Status: in progress. Parts 1-4 of 5 are done (data source and profile; baseline backtest; calendar, smoothing, level correction and a weather forecast; buffers, spot cost and battery timing). Next: CI and the final write-up.**
 
 How well can **simple, explainable forecasting methods** predict tomorrow's and next week's
 half-hourly electricity demand in Australia's National Electricity Market (NEM)? And how much
@@ -257,6 +257,77 @@ tuning, and by the holdout the fit had seen a summer, but it's a warning for any
 - **Size buffers by time of day,** because midday still holds the largest share of the error. Part 4 does that.
 - **Override 27-31 December by hand,** since neither the calendar nor the weather fixes that week.
 
+## Part 4: how much buffer, and what is the error worth?
+
+Full generated report: [`results/BUFFERS.md`](results/BUFFERS.md); every buffer is in [`results/buffers.csv`](results/buffers.csv)
+and every test in [`results/buffer_coverage.csv`](results/buffer_coverage.csv).
+
+**Set first, tested after.** Buffers were set on Dec 2024 - Sep 2025 and tested on the holdout year. A day only counts as covered if
+none of its half-hours goes past the buffer, because one bad half-hour is enough to breach a limit or a position. *Up* guards against
+under-forecasting, *down* against over-forecasting.
+
+**A half-hour percentile doesn't cover days.** A buffer at the 95th percentile of half-hours covered only 66% of days (53-73%), because a day
+has 48 chances to miss. Sizing on each day's worst half-hour covered 93.9%, with a buffer twice as large. That's a little short of the promise, so
+it's best read as about 94%, not a guarantee.
+
+![Whole days covered, by recipe](results/charts/buffer_promise_kept.png)
+
+**Shape it by time of day.** Giving each time block its own 95% lets the whole day slip to 84.8%, because five blocks mean five chances to miss.
+Stretching those block buffers by one factor fixes that: 94.2% of days covered, level with a flat buffer, on 3-21% less cover across the day.
+It holds more than flat at midday and much less overnight. The mainland's midday buffer is 2.5-4.6× its overnight one.
+
+Day-ahead buffers to carry forward, 95% of whole days, in MW, set on all 669 days from Dec 2024 to Sep 2026:
+
+| Region | Under-forecast: flat | Shaped: 00-06 / 10-16 / 16-21 | Over-forecast: flat | Shaped: 00-06 / 10-16 / 16-21 |
+|---|---:|---:|---:|---:|
+| New South Wales | 1,963 | 582 / 2,641 / 1,866 | 1,636 | 704 / 2,328 / 1,840 |
+| Queensland | 1,155 | 414 / 1,656 / 993 | 1,089 | 441 / 1,652 / 1,097 |
+| Victoria | 1,547 | 577 / 2,111 / 1,376 | 1,145 | 573 / 1,457 / 1,136 |
+| South Australia | 661 | 206 / 947 / 665 | 533 | 170 / 742 / 525 |
+| Tasmania | 169 | 144 / 197 / 156 | 176 | 158 / 203 / 167 |
+
+Looking a week out adds 8-31%. Under-forecasts are the larger risk in New South Wales, Victoria and South Australia. The 90% level, the
+other blocks and every seasonal buffer are in the CSV.
+
+**The all-year promise is uneven.** The shaped buffer covered 88.6% of summer days and 97.6% of winter ones. A seasonal version evens that out and is
+19% smaller than flat, but it reached 92.1% overall, and only 88.0% in spring, the one season it learned from just 30 days of. It isn't proven yet.
+
+![Buffers by season and time of day](results/charts/buffer_by_season_and_hour.png)
+
+**Midday is the hardest block everywhere.** It holds the hardest season-and-block cell for all 5 regions on both sides. This confirms Part 3b's advice to size by time of day.
+
+**Most breaches fall on ordinary days.** Holidays and 27-31 December are only 14 of the holdout's 221 breaches of a flat buffer (6%, on 4% of days). They're the worst days in percentage
+terms (Part 3b), but they aren't the main reason a buffer fails. Summer brings 38% of breaches. When a buffer does fail, the year's worst miss was 1.4-2.3× the buffer.
+
+**Regions don't all miss at once.** One buffer on the 5 regions' combined miss is 38-45% smaller than the sum of their own, which is an upper limit because it ignores interconnector limits.
+
+**The better forecast shrinks the buffer.** For the same promise on the same days, the weather method needs 30-56% less buffer than "same day last week".
+
+**At spot, the cost falls faster than the error.** Take a retailer with 1% of a region's load, hedged on its forecast at the year's mean price and settling the difference at spot. Weather cuts the cost of
+forecast error by 8-69% on the blend, more than its WAPE cut (7-32%) in all 5 regions, and the saving is clear of zero outside Tasmania. What's left is $0.59-3.13 per MWh of load. Read this as a yardstick for
+comparing forecasts, not a bill, because a retailer's own misses differ from its region's.
+
+**The right cover differs by region.** Half-hours above $300/MWh, the level of ASX's $300 cap futures, hold 63% of that cost in New South Wales (54 of 17,520 half-hours) and 61% in South Australia. In Queensland and Victoria they
+hold 0% and 6%, while negative-price half-hours hold 55% and 41%, which a cap doesn't touch.
+
+**A demand forecast barely helps a battery.** A 100 MW / 400 MWh battery ran one 4-hour charge and one 4-hour discharge a day. A fixed timetable, set before the holdout, did as well as the with-weather forecast or
+better in 4 of 5 regions: clearly ahead in Queensland, and can't be told apart in New South Wales, Victoria and Tasmania. Only South Australia gained, by $852k a year before losses. Even
+knowing the day's demand exactly closes only 4-23% of the gap to the actual-price ceiling. The timetable already earns 65-90% of that ceiling, and copying yesterday's prices is clearly worse in 4 of 5 regions.
+
+![Battery spread against a fixed timetable](results/charts/battery_spread.png)
+
+**So what for the business?**
+- **Size a buffer on each day's worst half-hour,** never on a percentile of half-hours.
+- **Carry the shaped buffer.** It gives the same promise as a flat one for 3-21% less cover, with more at midday and far less overnight.
+- **Add cover in summer,** and retest seasonal buffers now that spring has 121 days behind it.
+- **Plan for the breach.** A buffer limits how often it fails, not how far.
+- **Net buffers across regions** where the book allows it.
+- **Match the cover to the region:** a $300 cap fits New South Wales and South Australia far better than Queensland or Victoria.
+- **Keep a battery on a timetable unless a price forecast beats it.** Better demand forecasts aren't what limits it, so a price forecast is the one to test next. The ceiling shows the prize, not what such a forecast would earn.
+
+The dollar figures rest on simple assumptions: region-wide misses, a flat hedge at a price known only in hindsight, and a price-taking battery with no losses and one cycle a day. A few half-hours decide each year, and there's
+one test year. The report's Limits section has the full list.
+
 ## Plan
 
 | Part | What | Status |
@@ -265,8 +336,8 @@ tuning, and by the holdout the fit had seen a summer, but it's a warning for any
 | 2 | Rolling-origin backtest harness; naive, seasonal-naive, 4-week-mean and climatology baselines; day-ahead and week-ahead error (WAPE, MAE, bias, peak and trough error) | ✅ done |
 | 3 | Weekday rule, holiday calendar, Holt-Winters, corrected climatology and a blend, tuned on one year and scored on the next | ✅ done |
 | 3b | A simple, explainable weather adjustment from archived forecasts rather than actuals, tuned on one year and scored on the next | ✅ done |
-| 4 | Business translation: how many MW of buffer cover 90% / 95% of days, which regions and seasons are hardest, recommendations | next |
-| 5 | CI, TL;DR and final write-up | |
+| 4 | Business translation: MW of buffer for 90% / 95% of days, tested on the holdout; hardest regions, seasons and hours; spot cost of the error; battery timing; recommendations | ✅ done |
+| 5 | CI, TL;DR and final write-up | next |
 
 ## How to run
 
@@ -278,7 +349,8 @@ python -m scripts.profile              # Part 1: source profile report + charts
 python -m scripts.backtest             # Part 2: backtest report, metrics CSV + charts (~20 s)
 python -m scripts.improve              # Part 3: tuning, holdout report, metrics CSV + charts (~80 s)
 python -m scripts.weather              # Part 3b: weather tuning, holdout report, metrics CSV + charts (~60 s)
-pytest                                 # 139 tests (~4 min)
+python -m scripts.buffers              # Part 4: buffers, spot cost, battery timing, report, CSVs + charts (~40 s)
+pytest                                 # 186 tests (~5 min)
 
 # optional: rebuild the snapshot from AEMO's raw files (~127 MB download)
 python -m scripts.download_data        # fetches data/raw/, checks every pinned SHA-256
@@ -339,6 +411,11 @@ the run instead of silently changing the numbers.
   demand and weather leaves the tuned settings unchanged; Victoria's holdout WAPE is recounted with loops and plain solves, without
   the project's feature or fit code; perfect weather beats fresher, fresher beats strict, and strict beats temperature only and the blend.
   16 deliberate bugs (no older weather, a fit that sees its own month, radiation an hour out, a leaked recent week and others) are each caught.
+- **Part 4 arithmetic** (`tests/test_buffers.py`): hand-worked checks of the rank rule, seasons, time blocks, day coverage, the stretch factor, the imbalance cost against the full bill, and battery windows
+  against a brute-force search; a half-hour percentile is shown undercovering days on a made-up series.
+- **Part 4 report** (`tests/test_buffers_report.py`): outputs match a fresh run; the forecasts reproduce Part 3b's scores; spoiling the holdout leaves the buffers and the battery timetable unchanged; only the two ceilings can read the
+  target day; flat, shaped and week-ahead buffers, coverage, the spot cost and a battery spread are recounted without `demand/buffers.py`; the report's claims are checked against the numbers. 19 deliberate bugs are each caught by these
+  logic tests alone, and writing them found a real one: the CSV was rounding the 0.95 level, now stored as a whole percent.
 
 ## Layout
 
@@ -356,6 +433,8 @@ scripts/improve.py        tune -> holdout -> results/IMPROVEMENTS.md, metrics, s
 scripts/download_weather.py archived forecasts -> data/weather_forecasts.csv.gz + WEATHER.json
 demand/weather.py         weather snapshot on the demand slots, features, the monthly ridge fit
 scripts/weather.py        tune -> holdout -> results/WEATHER.md, metrics, settings + charts
+demand/buffers.py         buffer rules, day coverage, imbalance cost, battery windows
+scripts/buffers.py        set -> test -> results/BUFFERS.md, buffers.csv, buffer_coverage.csv + charts
 tests/                    pytest
 ```
 
