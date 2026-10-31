@@ -1,6 +1,6 @@
 # Forecasting electricity demand for operations planning (AEMO, 5 NEM regions)
 
-**Status: in progress. Parts 1-2 of 5 and the first half of Part 3 are done (data source and profile; baseline backtest; calendar, smoothing and level correction). Next: weather.**
+**Status: in progress. Parts 1-3 of 5 are done (data source and profile; baseline backtest; calendar, smoothing, level correction and a weather forecast). Next: how much buffer the leftover error calls for.**
 
 How well can **simple, explainable forecasting methods** predict tomorrow's and next week's
 half-hourly electricity demand in Australia's National Electricity Market (NEM)? And how much
@@ -23,6 +23,7 @@ exactly how good they are.
 | **Raw files** | 465 monthly CSVs (127 MB), 30-minute rows to Sep 2021, then 5-minute rows; each SHA-256 pinned in [`data/raw_manifest.json`](data/raw_manifest.json) |
 | **Committed snapshot** | [`data/demand_halfhourly.csv.gz`](data/demand_halfhourly.csv.gz): 679,200 half-hours (6.7 MB), described in [`data/SNAPSHOT.json`](data/SNAPSHOT.json) |
 | **Public holidays** | [`data/public_holidays.csv`](data/public_holidays.csv), 2019-2026, from the open-source [`holidays`](https://github.com/vacanza/holidays) package (MIT, version pinned). Checked against the [official list](https://data.gov.au/data/dataset/australian-holidays-machine-readable-dataset) (data.gov.au, CC BY 3.0 AU), kept in [`data/official_holidays_2019_2025.csv`](data/official_holidays_2019_2025.csv) |
+| **Weather forecasts** | [`data/weather_forecasts.csv.gz`](data/weather_forecasts.csv.gz): what ECMWF's IFS 0.25 model predicted 0-7 days ahead for the 5 capitals, Apr 2024 - Sep 2026 (109,560 hours, 2.4 MB, hash in [`data/WEATHER.json`](data/WEATHER.json)). [Weather data by Open-Meteo.com](https://open-meteo.com/), Previous Runs API, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), no key; the free API is for non-commercial use, which this study is |
 
 **Demand** here is AEMO's *operational demand* (`TOTALDEMAND`, MW): what the grid supplies, net
 of rooftop solar. **Times** are NEM time (AEST, UTC+10, all year, no daylight saving), stamped
@@ -196,6 +197,66 @@ between Christmas and New Year, which a public-holiday calendar doesn't cover.
 - **The next gain has to come from the middle of the day**, which is where the weather step comes in. The blend's
   scores are now its bar (section 8 of the report).
 
+## Part 3b: what does a weather forecast add?
+
+Full generated report: [`results/WEATHER.md`](results/WEATHER.md); every number is in
+[`results/weather_metrics.csv`](results/weather_metrics.csv).
+
+**The weather had to be a forecast a planner could have had.** Scoring on what the weather turned out to be would flatter
+the method, and so would Open-Meteo's popular "historical forecast" series, which stitches together the first hours of each
+model run. This uses its Previous Runs archive of what the model predicted days ahead. A model run takes hours to publish,
+so the day-old run could come out after the midnight origin. To be strict, the headline reads weather **one day older**
+than its lead (tomorrow's forecast uses `previous_day2`). Lead 7 can't go older, because the archive stops there.
+
+**The method fits on one line.** For each half-hour, a small regression explains the blend's past misses from three things:
+how much hotter than a threshold, colder than a threshold and sunnier tomorrow looks than the last 7 days did. It's refit monthly on past days
+only. The thresholds and a shrinkage setting were chosen per region on the tuning year, and the recipe was fixed before the
+holdout was first scored.
+
+**Day-ahead, it beats the blend everywhere, on the unseen year:**
+
+| Region | Blend | With weather | Cut | 95% interval | MW saved per half-hour |
+|---|---:|---:|---:|---:|---:|
+| New South Wales | 5.9% | 4.5% | 23.9% | 19.9-27.4% | 105 |
+| Queensland | 4.2% | 3.3% | 20.0% | 15.0-24.4% | 52 |
+| Victoria | 7.9% | 5.5% | 30.1% | 25.4-34.4% | 119 |
+| South Australia | 12.4% | 8.5% | 32.0% | 26.8-36.7% | 52 |
+| Tasmania | 5.4% | 5.0% | 6.9% | 4.3-9.4% | 4 |
+
+**Week-ahead, it does too,** by 4.8% in Tasmania and 13.6-21.7% elsewhere, with all 5 intervals clear of zero. In Part 3 the blend
+couldn't be told apart from the best baseline in New South Wales and South Australia. With weather, their week-ahead error falls
+well below that baseline (7.5% to 5.9% and 13.6% to 10.8%).
+
+![Weather against the blend](results/charts/weather_vs_blend.png)
+
+**Sun matters as much as heat.** Temperature alone takes South Australia from 12.4% to 10.7%, and adding solar radiation takes it to
+8.5%. At noon, an extra 100 W/m² of forecast sun lowers grid demand by 352 MW in New South Wales and 143 MW in South Australia: rooftop
+solar, seen from the grid side.
+
+**The weather forecast isn't the main limit.** Weather a day fresher trims error by only 0.8-4.5% more. Even the archive's
+shortest-range weather, which no planner has in advance, leaves 3.1-7.7% WAPE, so forecast error costs just 14-26% of the possible gain.
+
+**Part 3 expected the gain at midday. It came all day.** On the mainland, 45-55% of the MW saved came from 10:00-16:00, a
+quarter of the day, but error fell at every hour, so that window still holds 42-47% of what's left (43-50% before).
+
+![Day-ahead error by time of day](results/charts/weather_error_by_time_of_day.png)
+
+**The Christmas shutdown idea failed its test.** Treating 27-31 December like a holiday had to help the blend in at least 3 of 5
+regions on the tuning year, and it helped in 2, so it's out. Those days still make up 5 of the 15 worst.
+
+**One setback is worth stating.** The first fits, in October and November 2024, had seen only winter. In November 2024 Victoria's error with
+weather was 96% above the blend's, because the first hot days were an extrapolation. Those two months were left out of the
+tuning, and by the holdout the fit had seen a summer, but it's a warning for anyone starting such a model from a short archive.
+
+**So what for the business?**
+- **Get a weather forecast next.** It takes another 20-32% off mainland day-ahead error and stays explainable: each MW of
+  adjustment traces back to degrees and sun. The archive is free for a study like this one; a business would need a paid plan.
+- **Include the sun.** On a grid with this much rooftop solar, a temperature-only adjustment misses much of the gain.
+- **Don't pay for a fresher feed on this evidence.** A day of freshness adds little.
+- **Tasmania is the exception:** a 4 MW saving, so it's the last place to spend effort.
+- **Size buffers by time of day,** because midday still holds the largest share of the error. Part 4 does that.
+- **Override 27-31 December by hand,** since neither the calendar nor the weather fixes that week.
+
 ## Plan
 
 | Part | What | Status |
@@ -203,8 +264,8 @@ between Christmas and New Year, which a public-holiday calendar doesn't cover.
 | 1 | Pinned AEMO download, half-hourly snapshot, source profile | ✅ done |
 | 2 | Rolling-origin backtest harness; naive, seasonal-naive, 4-week-mean and climatology baselines; day-ahead and week-ahead error (WAPE, MAE, bias, peak and trough error) | ✅ done |
 | 3 | Weekday rule, holiday calendar, Holt-Winters, corrected climatology and a blend, tuned on one year and scored on the next | ✅ done |
-| 3b | A simple, explainable temperature adjustment from free public weather data, using forecasts rather than actuals | next |
-| 4 | Business translation: how many MW of buffer cover 90% / 95% of days, which regions and seasons are hardest, recommendations | |
+| 3b | A simple, explainable weather adjustment from archived forecasts rather than actuals, tuned on one year and scored on the next | ✅ done |
+| 4 | Business translation: how many MW of buffer cover 90% / 95% of days, which regions and seasons are hardest, recommendations | next |
 | 5 | CI, TL;DR and final write-up | |
 
 ## How to run
@@ -216,7 +277,8 @@ pip install -r requirements.txt        # or requirements-lock.txt for the exact 
 python -m scripts.profile              # Part 1: source profile report + charts
 python -m scripts.backtest             # Part 2: backtest report, metrics CSV + charts (~20 s)
 python -m scripts.improve              # Part 3: tuning, holdout report, metrics CSV + charts (~80 s)
-pytest                                 # 99 tests (~2.5 min)
+python -m scripts.weather              # Part 3b: weather tuning, holdout report, metrics CSV + charts (~60 s)
+pytest                                 # 139 tests (~4 min)
 
 # optional: rebuild the snapshot from AEMO's raw files (~127 MB download)
 python -m scripts.download_data        # fetches data/raw/, checks every pinned SHA-256
@@ -224,6 +286,10 @@ python -m scripts.build_snapshot       # rewrites data/demand_halfhourly.csv.gz 
 
 # optional: rebuild the holiday calendar (--official also re-downloads the pinned check file)
 python -m scripts.build_holidays
+
+# optional: weather archive (no key). No flag checks the committed hash; --fetch compares with a new download
+python -m scripts.download_weather
+python -m scripts.download_weather --fetch
 ```
 
 `download_data --pin` records hashes only for files that have none yet (e.g. after moving
@@ -265,6 +331,14 @@ the run instead of silently changing the numbers.
   tuned settings unchanged; the blend's holdout WAPE is recounted in plain Python with no project code; the weekday
   rule equals naive on ordinary midweek days; baselines match Part 2's file; the interval resamples whole weeks. 15
   deliberate bugs, including the real Tuesday one, are each caught.
+- **Weather step** (`tests/test_weather.py`): hand-worked half-hour alignment and features; a gap or missing value stops the run;
+  the snapshot matches its hash, rebuilds byte for byte and is on the NEM clock; forecast skill decays with lead as a real forecast's
+  should; the fit recovers known slopes; spoiling anything after the origin, or anything after the start of the origin's month
+  for the fit, changes nothing. A running-sum bug that silently zeroed the adjustment during development now has its own test.
+- **Part 3b report** (`tests/test_weather_report.py`): outputs match a fresh run; the blend matches Part 3's file; spoiling the holdout's
+  demand and weather leaves the tuned settings unchanged; Victoria's holdout WAPE is recounted with loops and plain solves, without
+  the project's feature or fit code; perfect weather beats fresher, fresher beats strict, and strict beats temperature only and the blend.
+  16 deliberate bugs (no older weather, a fit that sees its own month, radiation an hour out, a leaked recent week and others) are each caught.
 
 ## Layout
 
@@ -279,8 +353,12 @@ scripts/backtest.py       backtest -> results/BACKTEST.md, backtest_metrics.csv 
 scripts/build_holidays.py holiday calendar + its reconciliation with the official list
 demand/improved.py        weekday rule, Holt-Winters, corrected climatology, blend, tuning grid
 scripts/improve.py        tune -> holdout -> results/IMPROVEMENTS.md, metrics, settings + charts
+scripts/download_weather.py archived forecasts -> data/weather_forecasts.csv.gz + WEATHER.json
+demand/weather.py         weather snapshot on the demand slots, features, the monthly ridge fit
+scripts/weather.py        tune -> holdout -> results/WEATHER.md, metrics, settings + charts
 tests/                    pytest
 ```
 
 *Data: © AEMO, used under AEMO's copyright permissions with attribution. Public holidays: `holidays` package (MIT),
-checked against the Australian Public Holidays Dates Machine Readable Dataset, data.gov.au, CC BY 3.0 AU.*
+checked against the Australian Public Holidays Dates Machine Readable Dataset, data.gov.au, CC BY 3.0 AU.
+[Weather data by Open-Meteo.com](https://open-meteo.com/), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); hourly values moved onto half-hours and turned into degrees and differences.*
