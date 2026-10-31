@@ -1,0 +1,40 @@
+{
+ "source": "Open-Meteo Previous Runs API",
+ "url": "https://previous-runs-api.open-meteo.com/v1/forecast",
+ "licence": "CC BY 4.0",
+ "attribution": "Weather data by Open-Meteo.com",
+ "model": "ecmwf_ifs025",
+ "timezone": "Etc/GMT-10",
+ "first_day": "2024-04-01",
+ "last_day": "2026-09-30",
+ "sites": {
+  "NSW1": {
+   "city": "Sydney",
+   "latitude": -33.87,
+   "longitude": 151.21
+  },
+  "QLD1": {
+   "city": "Brisbane",
+   "latitude": -27.47,
+   "longitude": 153.03
+  },
+  "VIC1": {
+   "city": "Melbourne",
+   "latitude": -37.81,
+   "longitude": 144.96
+  },
+  "SA1": {
+   "city": "Adelaide",
+   "latitude": -34.93,
+   "longitude": 138.6
+  },
+  "TAS1": {
+   "city": "Hobart",
+   "latitude": -42.88,
+   "longitude": 147.33
+  }
+ },
+ "rows": 109560,
+ "sha256": "97baa276fed3d7e2f80eccb8eb479ea301fea8ff72bc789e96556d10dd78df21",
+ "retrieved": "2026-10-31"
+}
