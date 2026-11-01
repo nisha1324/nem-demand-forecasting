@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regenerate-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-lock.txt
+
+      # The lock file pins the versions the committed outputs were made with,
+      # so the CSV, report and PNG comparisons below are byte for byte.
+      - name: Install dependencies
+        run: pip install -r requirements-lock.txt
+
+      # No download here: everything runs from the committed snapshots.
+      # Rerun every generator from the README's "How to run".
+      # If any committed report, CSV or chart changes, fail.
+      - name: Regenerate reports and check nothing changed
+        run: |
+          python -m scripts.profile
+          python -m scripts.backtest
+          python -m scripts.improve
+          python -m scripts.weather
+          python -m scripts.buffers
+          git status --porcelain
+          test -z "$(git status --porcelain)" || { git diff --stat; exit 1; }
+
+      # The raw rebuild test skips: the 127 MB of AEMO files aren't in the repo.
+      - name: pytest
+        run: pytest -q
